@@ -1,8 +1,8 @@
 function SignIn() {
   function onSubmit(event) {
     event.preventDefault();
-    const signinForm = event.target;
-    // console.log(event.target);
+    const signinForm = event.target.form;
+    // console.log(event.target.form);
     // console.log(event.target["signin-email"].value);
     fetch("http://127.0.0.1:8000/api/v1/accounts/signin/", {
       method: "POST",
@@ -39,7 +39,7 @@ function SignIn() {
           required
         />
         <br />
-        <button onclick={onSubmit}>Sign In</button>
+        <button onClick={onSubmit}>Sign In</button>
       </form>
     </div>
   );

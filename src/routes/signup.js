@@ -1,7 +1,7 @@
 function SignUp() {
   function onSubmit(event) {
     event.preventDefault();
-    const signUpForm = event.target;
+    const signUpForm = event.target.form;
     fetch("http://127.0.0.1:8000/api/v1/accounts/", {
       method: "POST",
       headers: {
@@ -19,7 +19,6 @@ function SignUp() {
       .then((result) => {
         console.log(result);
         signUpForm.reset();
-        alert("회원가입에 성공하였습니다");
       })
       .catch((error) => console.log(error));
   }
@@ -27,21 +26,22 @@ function SignUp() {
     <div>
       <form id="signup-form" onSubmit={onSubmit}>
         <label htmlFor="input-email">email : </label>
-        <input id="input-email" name="email" type="email" required />
+        <input id="input-email" name="email" type="email" placeholder="email" required />
         <br />
-        <label htmlFor="input-password">password : </label>
-        <input id="input-password" name="password" type="password" required />
+        <label htmlFor="input-password" >password : </label>
+        <input id="input-password" name="password" type="password" placeholder="password" required />
         <br />
         <label htmlFor="input-confirm-password">confirm password : </label>
         <input
           id="input-confirm-password"
           name="confirm-password"
           type="password"
+          placeholder="confirm password"
           required
         />
         <br />
         <label htmlFor="input-nickname">nickname : </label>
-        <input id="input-nickname" name="nickname" type="text" required />
+        <input id="input-nickname" name="nickname" type="text" placeholder="nickname" required />
         <br />
         <button onClick={onSubmit}>submit</button>
       </form>

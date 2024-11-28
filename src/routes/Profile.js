@@ -12,8 +12,9 @@ function Profile() {
     ).json();
     setUserInfo(user);
     setLoading(false);
+    return;
   };
-  useEffect(() => getProfile(), []);
+  useEffect(() => {getProfile()}, []);
   return (
     <div>
       {loading ? (

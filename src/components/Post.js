@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Comment from "./Comment";
 
 function Post({ id }) {
   const [loading, setLoading] = useState(true);
@@ -88,32 +89,12 @@ function Post({ id }) {
             {likeUser ? "❤️" : "🤍"}{" "}
           </span>{" "}
           <span> {post.like_count} </span>
-          <span onClick={showComment} style={{ cursor: "pointer" }}> 💬 </span>{" "}
+          <span onClick={showComment} style={{ cursor: "pointer" }}>
+            {" "}
+            💬{" "}
+          </span>{" "}
           <span>{post.comments.length}</span>
-          {showComments ? (post.comments.length === 0 ? null : (
-            <div
-              style={{
-                border: "1px solid",
-                padding: "5px",
-              }}
-            >
-              {post.comments.map((comment) => (
-                <div key={comment.id}>
-                  <strong>{comment.author.nickname}</strong>{" "}
-                  <span>{comment.content}</span>{" "}
-                  <span
-                    style={{
-                      color: "gray",
-                      fontSize: "10px",
-                    }}
-                  >
-                    {comment.created_at.slice(0, 10)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )) : null}
-          
+          <Comment id={id} showComments={showComments}/>
           <hr />
         </div>
       )}

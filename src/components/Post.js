@@ -1,9 +1,52 @@
-// import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function Movie({ image, author, content, created, comments }) {
+function Post({
+  id,
+  image,
+  author,
+  content,
+  created,
+  comments,
+  like,
+  likeCount,
+}) {
   //   const [showComment, setShowComment] = useState(false);
-  //   console.log(comments[0].content);
+  const [likeUser, setLikeUser] = useState(false);
+  //   let likeUsers = like.map((l) => l.email);
+  //   {
+  //     likeUsers.includes(localStorage.getItem("email"))
+  //       ? setLikeUser(true)
+  //       : setLikeUser(false);
+  //   }
+
+  const likeBtn = async (event) => {
+    // console.log(event);
+    const json = await (
+      await fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/like/`, {
+        method: "POST",
+        headers: {
+          // 나중에는 로그인시에 토큰을 스토리지에 저장하고, 가져와서 사용해야 함
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      })
+    ).json();
+    {
+      json.message === "좋아요" ? setLikeUser(true) : setLikeUser(false);
+    }
+    console.log(json);
+  };
+
+  useState(() => {
+    // 첫 로드시에 로그인한 사용자의 좋아요 정보를 가져와서 표시해줌
+    let likeUsers = like.map((l) => l.email);
+    {
+      likeUsers.includes(localStorage.getItem("email")) // 해당 포스트
+        ? setLikeUser(true)
+        : setLikeUser(false);
+    }
+  }, []);
 
   return (
     <div>
@@ -28,33 +71,43 @@ function Movie({ image, author, content, created, comments }) {
         alt="blank"
       />
       <br />
-      <span>작성일자 : {created.slice(0, 10)} </span>
-      <p>{content}</p>
-      <div
-        style={{
-          border: "1px solid",
-          padding: "5px",
-        }}
-      >
-        <strong> 💬 </strong>
-        {comments.map((comment) => (
-          <div>
-            <strong>{comment.author.nickname}</strong>{" "}
-            <span>{comment.content}</span>{" "}
-            <span
-              style={{
-                color: "gray",
-                fontSize: "10px",
-              }}
-            >
-              {comment.created_at.slice(0, 10)}
-            </span>
-          </div>
-        ))}
-      </div>
+      <p>
+        <strong>{author.nickname} </strong>
+        {content} <br />
+        <span style={{ color: "gray", fontSize: "12px" }}>
+          {created.slice(0, 10)}{" "}
+        </span>
+      </p>
+      <span onClick={likeBtn} style={{ cursor: "pointer" }}>
+        {likeUser ? "❤️" : "🤍"} <span> {likeCount} </span>
+      </span>
+      <span> 💬 </span>
+      {comments.length === 0 ? null : (
+        <div
+          style={{
+            border: "1px solid",
+            padding: "5px",
+          }}
+        >
+          {comments.map((comment) => (
+            <div>
+              <strong>{comment.author.nickname}</strong>{" "}
+              <span>{comment.content}</span>{" "}
+              <span
+                style={{
+                  color: "gray",
+                  fontSize: "10px",
+                }}
+              >
+                {comment.created_at.slice(0, 10)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
       <hr />
     </div>
   );
 }
 
-export default Movie;
+export default Post;

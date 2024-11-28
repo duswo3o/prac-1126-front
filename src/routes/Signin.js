@@ -15,6 +15,9 @@ function SignIn() {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
+        localStorage.setItem("accessToken", result.access)
+        localStorage.setItem("refreshToken", result.refresh)
+        localStorage.setItem("email", signinForm["signin-email"].value)
         signinForm.reset();
       });
   }

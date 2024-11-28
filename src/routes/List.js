@@ -13,11 +13,10 @@ function List() {
     setLoading(false);
     return;
   };
-//   getPosts();
+
   useEffect(() => {
-      getPosts();
+    getPosts();
   }, []);
-  //   console.log(posts[0]);
 
   return (
     <div>
@@ -27,17 +26,7 @@ function List() {
         <div>
           <h3>Post List</h3>
           {posts.map((post) => (
-            <Post
-              key={post.id}
-              id={post.id}
-              image={post.image}
-              author={post.author}
-              content={post.content}
-              created={post.created_at}
-              comments={post.comments}
-              like={post.like}
-              likeCount={post.like_count}
-            />
+            <Post key={post.id} id={post.id} likeCount={post.like_count} />
           ))}
         </div>
       )}

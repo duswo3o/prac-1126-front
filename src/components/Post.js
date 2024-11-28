@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function Post({ id, likeCount }) {
-  //   const [showComment, setShowComment] = useState(false);
+function Post({ id }) {
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState([]);
   const [likeUser, setLikeUser] = useState(false);
-  const [count, setCount] = useState(likeCount);
+  const [showComments, setShowComments] = useState(false);
 
   const getPost = async () => {
     const json = await (
@@ -20,7 +19,6 @@ function Post({ id, likeCount }) {
         ? setLikeUser(true)
         : setLikeUser(false);
     }
-    setCount(()=>json.like_count)
   };
 
   const likeBtn = async () => {
@@ -38,7 +36,10 @@ function Post({ id, likeCount }) {
       json.message === "좋아요" ? setLikeUser(true) : setLikeUser(false);
     }
     console.log(json); // 좋아요 상태 출력
-    setCount(()=>post.like_count);
+  };
+
+  const showComment = () => {
+    setShowComments((current) => !current);
   };
 
   useEffect(() => {
@@ -84,10 +85,12 @@ function Post({ id, likeCount }) {
             </span>
           </p>
           <span onClick={likeBtn} style={{ cursor: "pointer" }}>
-            {likeUser ? "❤️" : "🤍"} <span> {count} </span>
-          </span>
-          <span> 💬 </span>
-          {post.comments.length === 0 ? null : (
+            {likeUser ? "❤️" : "🤍"}{" "}
+          </span>{" "}
+          <span> {post.like_count} </span>
+          <span onClick={showComment} style={{ cursor: "pointer" }}> 💬 </span>{" "}
+          <span>{post.comments.length}</span>
+          {showComments ? (post.comments.length === 0 ? null : (
             <div
               style={{
                 border: "1px solid",
@@ -95,7 +98,7 @@ function Post({ id, likeCount }) {
               }}
             >
               {post.comments.map((comment) => (
-                <div>
+                <div key={comment.id}>
                   <strong>{comment.author.nickname}</strong>{" "}
                   <span>{comment.content}</span>{" "}
                   <span
@@ -109,7 +112,8 @@ function Post({ id, likeCount }) {
                 </div>
               ))}
             </div>
-          )}
+          )) : null}
+          
           <hr />
         </div>
       )}

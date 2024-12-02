@@ -5,6 +5,7 @@ import Profile from "./routes/Profile";
 import List from "./routes/List";
 import Navbar from "./components/Navbar";
 import CreatePost from "./routes/Createpost";
+import UpdatePost from "./routes/Updatepost";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/profile/:nickname" element={<Profile />}></Route>
         <Route path="" element={<List />}></Route>
         <Route path="/post" element={<CreatePost />}></Route>
+        <Route path="/:id/update" element={<UpdatePost />}></Route>
       </Routes>
     </Router>
   );

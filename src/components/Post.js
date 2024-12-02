@@ -116,10 +116,15 @@ function Post({ id }) {
               </p>
             </Link>
             {isAuthor ? (
+              <div>
+                <Link to={`/${id}/update`}>
+              <button style={{ height: "30px" }}>수정</button>
+                </Link>
               <button style={{ height: "30px" }} onClick={deletePost}>
                 {" "}
                 삭제{" "}
               </button>
+              </div>
             ) : null}
           </div>
           <img

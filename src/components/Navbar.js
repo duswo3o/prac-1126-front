@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import styles from "./components.module.css";
+
 function Navbar() {
   const [isLogin, setIsLogin] = useState(false);
 
@@ -41,10 +43,7 @@ function Navbar() {
         justifyContent: "space-around",
       }}
     >
-      <Link
-        to="/"
-        style={{ textDecoration: "none", color: "blue", cursor: "pointer" }}
-      >
+      <Link to="/" className={styles.linkBtn}>
         Home
       </Link>
       {isLogin ? (
@@ -63,20 +62,17 @@ function Navbar() {
         </div>
       ) : (
         <div>
-          <Link
-            to="/signup"
-            style={{ textDecoration: "none", color: "blue", cursor: "pointer" }}
-          >
+          <Link to="/signup" className={styles.linkBtn}>
             signup
           </Link>{" "}
-          <Link
-            to="/signin"
-            style={{ textDecoration: "none", color: "blue", cursor: "pointer" }}
-          >
+          <Link to="/signin" className={styles.linkBtn}>
             signin
           </Link>
         </div>
       )}
+      <Link to="/post" className={styles.linkBtn}>
+        <div> ➕ Post </div>
+      </Link>
     </div>
   );
 }

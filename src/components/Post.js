@@ -43,6 +43,18 @@ function Post({ id }) {
     setShowComments((current) => !current);
   };
 
+  const deletePost = async () => {
+    const json = await (
+      await fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/delete/`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+    ).json();
+    console.log(json);
+  };
+
   useEffect(() => {
     getPost();
   }, [likeUser]);
@@ -53,26 +65,29 @@ function Post({ id }) {
         "Loading..."
       ) : (
         <div>
-          <Link
-            to={`/profile/${post.author.nickname}`}
-            style={{
-              textDecoration: "none",
-              color: "black",
-              cursor: "pointer",
-            }}
-          >
-            <p>
-              <img
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                alt="default profile image"
-                style={{
-                  height: "30px",
-                  borderRadius: "50%",
-                }}
-              />{" "}
-              <span>{post.author.nickname}</span>
-            </p>
-          </Link>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Link
+              to={`/profile/${post.author.nickname}`}
+              style={{
+                textDecoration: "none",
+                color: "black",
+                cursor: "pointer",
+              }}
+            >
+              <p>
+                <img
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  alt="default profile image"
+                  style={{
+                    height: "30px",
+                    borderRadius: "50%",
+                  }}
+                />{" "}
+                <span>{post.author.nickname}</span>
+              </p>
+            </Link>
+            <button style={{ height: "30px" }} onClick={deletePost}> 삭제 </button>
+          </div>
           <img
             src="https://velog.velcdn.com/images/woowoon920/post/2c808829-e449-4e43-814d-04ed70c5557f/image.png"
             alt="blank"
@@ -94,7 +109,7 @@ function Post({ id }) {
             💬{" "}
           </span>{" "}
           <span>{post.comments.length}</span>
-          <Comment id={id} showComments={showComments}/>
+          <Comment id={id} showComments={showComments} />
           <hr />
         </div>
       )}

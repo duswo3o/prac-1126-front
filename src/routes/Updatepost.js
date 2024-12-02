@@ -20,7 +20,7 @@ function UpdatePost() {
 
     const formData = new FormData();
     if (updateImg) {
-      FormData.append("image", updateImg);
+      formData.append("image", updateImg);
     }
     formData.append("content", document.getElementById("update-content").value);
     console.log(formData);

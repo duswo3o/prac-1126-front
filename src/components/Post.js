@@ -7,6 +7,34 @@ function Post({ id }) {
   const [post, setPost] = useState([]);
   const [likeUser, setLikeUser] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false);
+
+
+  const getUser = (userId) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const decodedJWT = JSON.parse(
+        decodeURIComponent(
+          window
+            .atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        )
+      );
+      
+      if (decodedJWT.user_id == userId) {
+        setIsAuthor(true);
+      } else {
+        setIsAuthor(false);
+      }
+    } else {
+      setIsAuthor(false);
+    }
+  };
 
   const getPost = async () => {
     const json = await (
@@ -20,6 +48,7 @@ function Post({ id }) {
         ? setLikeUser(true)
         : setLikeUser(false);
     }
+    getUser(json.author.id);
   };
 
   const likeBtn = async () => {
@@ -86,7 +115,12 @@ function Post({ id }) {
                 <span>{post.author.nickname}</span>
               </p>
             </Link>
-            <button style={{ height: "30px" }} onClick={deletePost}> 삭제 </button>
+            {isAuthor ? (
+              <button style={{ height: "30px" }} onClick={deletePost}>
+                {" "}
+                삭제{" "}
+              </button>
+            ) : null}
           </div>
           <img
             src="https://velog.velcdn.com/images/woowoon920/post/2c808829-e449-4e43-814d-04ed70c5557f/image.png"

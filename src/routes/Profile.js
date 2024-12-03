@@ -1,11 +1,13 @@
 import react from "react";
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Modal from "../components/Modal";
 
 function Profile() {
   const { nickname } = useParams();
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState([]);
+  const [isFollow, setIsFollow] = useState(false);
 
   const getProfile = async () => {
     const user = await (
@@ -13,13 +15,38 @@ function Profile() {
     ).json();
     setUserInfo(user);
     setLoading(false);
-    console.log(user);
+    // console.log(user);
+    const followers = user.followers.map((f) => f.email);
+    // console.log(followers);
+    {
+      followers.includes(localStorage.getItem("email"))
+        ? setIsFollow(true)
+        : setIsFollow(false);
+    }
     return;
+  };
+
+  const followBtn = async () => {
+    const json = await (
+      await fetch(`http://127.0.0.1:8000/api/v1/accounts/${nickname}/follow/`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+      })
+    ).json();
+    // console.log(json);
+    const followMsg = `${nickname}님을 팔로우하였습니다.`;
+    if (json.message === followMsg) {
+      setIsFollow(true);
+    } else {
+      setIsFollow(false);
+    }
   };
 
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [isFollow]);
 
   return (
     <div>
@@ -27,11 +54,26 @@ function Profile() {
         "Loading..."
       ) : (
         <div>
-          <h3>
-            <strong>{userInfo.nickname}</strong>'s Profile
-          </h3>
-          {/* <p>{nickname}</p>
-          <p>email : {userInfo.email}</p> */}
+          <h3>{userInfo.nickname}'s Profile</h3>
+          <button onClick={followBtn}>{isFollow ? "팔로잉" : "팔로우"}</button>
+          <div style={{ display: "flex" }}>
+            <div style={{ padding: "5px", margin: "3px" }}>
+              {userInfo.posts.length}
+              <br />
+              <span>게시물</span>
+            </div>
+            <div style={{ padding: "5px", margin: "3px" }}>
+              {userInfo.followers.length}
+              <br />
+              <span>팔로워</span>
+              {/* <Modal /> */}
+            </div>
+            <div style={{ padding: "5px", margin: "3px" }}>
+              {userInfo.followings.length}
+              <br />
+              <span>팔로잉</span>
+            </div>
+          </div>
           <div
             style={{
               display: "flex",

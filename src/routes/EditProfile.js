@@ -39,6 +39,17 @@ function EditProfile() {
     console.log(json);
   };
 
+  const deleteUser = async () => {
+    const json = await fetch("http://127.0.0.1:8000/api/v1/accounts/delete/", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
+    });
+    console.log(json);
+    localStorage.clear();
+  };
+
   useEffect(() => {
     getProfile();
   }, []);
@@ -71,13 +82,21 @@ function EditProfile() {
           key={gender}
         >
           <option value="M">남자</option>
-          <option value="W">여자</option>
+          <option value="F">여자</option>
           <option value="N">비공개</option>
         </select>
         <br />
         <br />
         <button onClick={editProfile}>수정완료</button>
       </form>
+      <div style={{ width: "400px" }}>
+        <button
+          style={{ float: "right", backgroundColor: "tomato", color: "white" }}
+          onClick={deleteUser}
+        >
+          회원탈퇴
+        </button>
+      </div>
     </div>
   );
 }

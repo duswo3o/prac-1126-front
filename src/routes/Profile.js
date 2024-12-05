@@ -1,7 +1,6 @@
 import react from "react";
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Modal from "../components/Modal";
 
 function Profile() {
   const { nickname } = useParams();
@@ -102,7 +101,6 @@ function Profile() {
               {userInfo.followers.length}
               <br />
               <span>팔로워</span>
-              {/* <Modal /> */}
             </div>
             <div style={{ padding: "5px", margin: "3px" }}>
               {userInfo.followings.length}

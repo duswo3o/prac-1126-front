@@ -48,7 +48,7 @@ function Profile() {
         : setIsFollow(false);
     }
     isSameUser(user.id);
-    // console.log(user.id)
+    // console.log(user)
     return;
   };
 
@@ -109,6 +109,10 @@ function Profile() {
               <br />
               <span>팔로잉</span>
             </div>
+          </div>
+          <br />
+          <div>
+            {userInfo.bio}
           </div>
           <div
             style={{

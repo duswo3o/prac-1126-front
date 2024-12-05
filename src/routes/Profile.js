@@ -8,6 +8,30 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState([]);
   const [isFollow, setIsFollow] = useState(false);
+  const [isProfileUser, setIsProfileUser] = useState(false);
+
+  function isSameUser(profileID) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const decodedJWT = JSON.parse(
+        decodeURIComponent(
+          window
+            .atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        )
+      );
+      if (decodedJWT.user_id === profileID) {
+        setIsProfileUser(true);
+      } else {
+        setIsProfileUser(false);
+      }
+    }
+  }
 
   const getProfile = async () => {
     const user = await (
@@ -23,6 +47,8 @@ function Profile() {
         ? setIsFollow(true)
         : setIsFollow(false);
     }
+    isSameUser(user.id);
+    // console.log(user.id)
     return;
   };
 
@@ -55,7 +81,17 @@ function Profile() {
       ) : (
         <div>
           <h3>{userInfo.nickname}'s Profile</h3>
-          <button onClick={followBtn}>{isFollow ? "팔로잉" : "팔로우"}</button>
+          {isProfileUser ? (
+            <div>
+              <Link to={`/${nickname}/edit`}>
+                <button>프로필 수정</button>
+              </Link>
+            </div>
+          ) : (
+            <button onClick={followBtn}>
+              {isFollow ? "팔로잉" : "팔로우"}
+            </button>
+          )}
           <div style={{ display: "flex" }}>
             <div style={{ padding: "5px", margin: "3px" }}>
               {userInfo.posts.length}

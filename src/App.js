@@ -6,6 +6,7 @@ import List from "./routes/List";
 import Navbar from "./components/Navbar";
 import CreatePost from "./routes/Createpost";
 import UpdatePost from "./routes/Updatepost";
+import EditProfile from "./routes/EditProfile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="" element={<List />}></Route>
         <Route path="/post" element={<CreatePost />}></Route>
         <Route path="/:id/update" element={<UpdatePost />}></Route>
+        <Route path="/:nickname/edit" element={<EditProfile />}></Route>
       </Routes>
     </Router>
   );

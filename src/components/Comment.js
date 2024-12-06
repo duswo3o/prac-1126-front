@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { publicAPI, privateAPI } from "../axiosInstance";
+
 function Comment({ id, showComments }) {
   const [comments, setComments] = useState([]);
   const [updateId, setUpdateID] = useState(false);
@@ -42,22 +44,31 @@ function Comment({ id, showComments }) {
     event.preventDefault();
     let commentInput = event.target.form;
     // console.log(commentInput);
-    fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/comment/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      },
-      body: JSON.stringify({
+    // fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/comment/`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json; charset=utf-8",
+    //     Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    //   },
+    //   body: JSON.stringify({
+    //     content: commentInput["input-comment"].value,
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((result) => {
+    //     // console.log(result);
+    //     commentInput.reset();
+    //     getComment();
+    //   });
+    privateAPI
+      .post(`posts/${id}/comment/`, {
         content: commentInput["input-comment"].value,
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        // console.log(result);
+      })
+      .then((response) => {
         commentInput.reset();
         getComment();
-      });
+      })
+      .catch((error) => console.log(error));
   };
 
   const deleteComment = async (commentId, e) => {

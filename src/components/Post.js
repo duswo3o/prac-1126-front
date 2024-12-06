@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Comment from "./Comment";
+import { publicAPI, privateAPI } from "../axiosInstance";
 
 function Post({ id }) {
   const [loading, setLoading] = useState(true);
@@ -8,7 +9,6 @@ function Post({ id }) {
   const [likeUser, setLikeUser] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
-
 
   const getUser = (userId) => {
     const token = localStorage.getItem("accessToken");
@@ -25,8 +25,8 @@ function Post({ id }) {
             .join("")
         )
       );
-      
-      if (decodedJWT.user_id == userId) {
+
+      if (decodedJWT.user_id === userId) {
         setIsAuthor(true);
       } else {
         setIsAuthor(false);
@@ -37,35 +37,27 @@ function Post({ id }) {
   };
 
   const getPost = async () => {
-    const json = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/`)
-    ).json();
-    setPost(json);
+    const json = await publicAPI.get(`posts/${id}/`);
+    const data = json.data;
+    setPost(data);
     setLoading(false);
-    let likeUsers = json.like.map((l) => l.email);
-    {
-      likeUsers.includes(localStorage.getItem("email")) // 해당 포스트
-        ? setLikeUser(true)
-        : setLikeUser(false);
+    let likeUsers = data.like.map((l) => l.email);
+
+    if (likeUsers.includes(localStorage.getItem("email"))) {
+      setLikeUser(true);
+    } else {
+      setLikeUser(false);
     }
-    getUser(json.author.id);
+    getUser(data.author.id);
   };
 
   const likeBtn = async () => {
-    const json = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/like/`, {
-        method: "POST",
-        headers: {
-          // 나중에는 로그인시에 토큰을 스토리지에 저장하고, 가져와서 사용해야 함
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          "Content-Type": "application/json; charset=utf-8",
-        },
-      })
-    ).json();
+    const json = await await privateAPI.post(`posts/${id}/like/`);
+    const data = json.data;
     {
-      json.message === "좋아요" ? setLikeUser(true) : setLikeUser(false);
+      data.message === "좋아요" ? setLikeUser(true) : setLikeUser(false);
     }
-    console.log(json); // 좋아요 상태 출력
+    console.log(data); // 좋아요 상태 출력
   };
 
   const showComment = () => {
@@ -73,15 +65,8 @@ function Post({ id }) {
   };
 
   const deletePost = async () => {
-    const json = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/delete/`, {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-      })
-    ).json();
-    console.log(json);
+    const json = await privateAPI.post(`posts/${id}/delete/`);
+    console.log(json.data);
   };
 
   useEffect(() => {
@@ -118,12 +103,12 @@ function Post({ id }) {
             {isAuthor ? (
               <div>
                 <Link to={`/${id}/update`}>
-              <button style={{ height: "30px" }}>수정</button>
+                  <button style={{ height: "30px" }}>수정</button>
                 </Link>
-              <button style={{ height: "30px" }} onClick={deletePost}>
-                {" "}
-                삭제{" "}
-              </button>
+                <button style={{ height: "30px" }} onClick={deletePost}>
+                  {" "}
+                  삭제{" "}
+                </button>
               </div>
             ) : null}
           </div>

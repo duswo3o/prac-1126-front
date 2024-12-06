@@ -2,6 +2,8 @@ import react from "react";
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import { publicAPI, privateAPI } from "../axiosInstance";
+
 function Profile() {
   const { nickname } = useParams();
   const [loading, setLoading] = useState(true);
@@ -33,36 +35,29 @@ function Profile() {
   }
 
   const getProfile = async () => {
-    const user = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/accounts/${nickname}/`)
-    ).json();
-    setUserInfo(user);
+    const user = await publicAPI.get(`accounts/${nickname}/`);
+    const data = user.data;
+    setUserInfo(data);
     setLoading(false);
     // console.log(user);
-    const followers = user.followers.map((f) => f.email);
+    const followers = data.followers.map((f) => f.email);
     // console.log(followers);
     {
       followers.includes(localStorage.getItem("email"))
         ? setIsFollow(true)
         : setIsFollow(false);
     }
-    isSameUser(user.id);
+    isSameUser(data.id);
     // console.log(user)
     return;
   };
 
   const followBtn = async () => {
-    const json = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/accounts/${nickname}/follow/`, {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-      })
-    ).json();
+    const json = await privateAPI.post(`accounts/${nickname}/follow/`);
     // console.log(json);
+    const data = json.data;
     const followMsg = `${nickname}님을 팔로우하였습니다.`;
-    if (json.message === followMsg) {
+    if (data.message === followMsg) {
       setIsFollow(true);
     } else {
       setIsFollow(false);
@@ -109,9 +104,7 @@ function Profile() {
             </div>
           </div>
           <br />
-          <div>
-            {userInfo.bio}
-          </div>
+          <div>{userInfo.bio}</div>
           <div
             style={{
               display: "flex",

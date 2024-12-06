@@ -22,7 +22,7 @@ function Comment({ id, showComments }) {
         )
       );
 
-      if (decodedJWT.user_id == userId) {
+      if (decodedJWT.user_id === userId) {
         return true;
       } else {
         return false;
@@ -33,9 +33,7 @@ function Comment({ id, showComments }) {
   };
 
   const getComment = async () => {
-    const commentsList = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/comments/`)
-    ).json();
+    const commentsList = await publicAPI.get(`posts/${id}/comments/`);
     setComments(commentsList);
     // console.log(commentsList);
   };
@@ -43,23 +41,6 @@ function Comment({ id, showComments }) {
   const onSubmit = async (event) => {
     event.preventDefault();
     let commentInput = event.target.form;
-    // console.log(commentInput);
-    // fetch(`http://127.0.0.1:8000/api/v1/posts/${id}/comment/`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json; charset=utf-8",
-    //     Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    //   },
-    //   body: JSON.stringify({
-    //     content: commentInput["input-comment"].value,
-    //   }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((result) => {
-    //     // console.log(result);
-    //     commentInput.reset();
-    //     getComment();
-    //   });
     privateAPI
       .post(`posts/${id}/comment/`, {
         content: commentInput["input-comment"].value,
@@ -68,24 +49,19 @@ function Comment({ id, showComments }) {
         commentInput.reset();
         getComment();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error.response));
   };
 
   const deleteComment = async (commentId, e) => {
-    await fetch(
-      `http://127.0.0.1:8000/api/v1/posts/comment/${commentId}/delete/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-      }
-    ).then((response) => {
-      console.log(response);
-      getComment();
-    });
-    // .then((result) => console.log(result));
+    await privateAPI
+      .post(`posts/comment/${commentId}/delete/`)
+      .then((response) => {
+        console.log(response);
+        getComment();
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   };
 
   const updateComment = async (commentID, e) => {
@@ -94,35 +70,22 @@ function Comment({ id, showComments }) {
     } else {
       setUpdateID(commentID);
     }
-    // await fetch (
-    //   `http://127.0.0.1:8000/api/v1/posts/comment/${commentId}/`,{
-    //       method:"POST",
-    //       headers: {
-    //         "Content-Type": "application/json; charset=utf-8",
-    //         Authorization: "Bearer " + localStorage.getItem("accessToken"),
-    //       },
-    //   }
-    // )
   };
 
   const sendUpdateComment = async (e, commentID) => {
     e.preventDefault();
     console.log(e);
-    await fetch(`http://127.0.0.1:8000/api/v1/posts/comment/${commentID}/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      },
-      body: JSON.stringify({
+    await privateAPI
+      .post(`posts/comment/${commentID}/`, {
         content: document.getElementById("update-comment").value,
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
+      })
+      .then((response) => {
+        console.log(response.data);
         setUpdateID(false);
         getComment();
+      })
+      .catch((error) => {
+        console.log(error.response);
       });
   };
 

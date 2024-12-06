@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "./components.module.css";
+import { privateAPI } from "../axiosInstance";
 
 function Navbar() {
   const [isLogin, setIsLogin] = useState(false);
@@ -15,15 +16,11 @@ function Navbar() {
   };
 
   const logoutBtn = async () => {
-    await fetch("http://127.0.0.1:8000/api/v1/accounts/signout/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({
+    await privateAPI
+      .post("accounts/signout/", {
         refresh: localStorage.getItem("refreshToken"),
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
+      })
+      .then((response) => {
         localStorage.clear();
         getLogin();
       });

@@ -1,24 +1,26 @@
+import { publicAPI } from "../axiosInstance";
+
 function SignIn() {
   function onSubmit(event) {
     event.preventDefault();
     const signinForm = event.target.form;
     // console.log(event.target.form);
     // console.log(event.target["signin-email"].value);
-    fetch("http://127.0.0.1:8000/api/v1/accounts/signin/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({
+    publicAPI
+      .post("http://127.0.0.1:8000/api/v1/accounts/signin/", {
         email: signinForm["signin-email"].value,
         password: signinForm["signin-password"].value,
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        localStorage.setItem("accessToken", result.access)
-        localStorage.setItem("refreshToken", result.refresh)
-        localStorage.setItem("email", signinForm["signin-email"].value)
+      })
+      .then((response) => {
+        // console.log(response.data);
+        const data = response.data
+        localStorage.setItem("accessToken", data.access);
+        localStorage.setItem("refreshToken", data.refresh);
+        localStorage.setItem("email", signinForm["signin-email"].value);
         signinForm.reset();
+      })
+      .catch((error) => {
+        console.log(error.response);
       });
   }
   return (

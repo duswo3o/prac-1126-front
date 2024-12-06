@@ -1,52 +1,36 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import { publicAPI, privateAPI } from "../axiosInstance";
+
 function EditProfile() {
   const { nickname } = useParams();
   const [user, setUser] = useState([]);
   const [gender, setGender] = useState(null);
 
   const getProfile = async () => {
-    const profile = await (
-      await fetch(`http://127.0.0.1:8000/api/v1/accounts/${nickname}/`)
-    ).json();
+    const profile = await publicAPI.get(`accounts/${nickname}/`);
     // console.log(profile);
-    setUser(profile);
-    setGender(profile.gender);
+    const data = profile.data;
+    setUser(data);
+    setGender(data.gender);
   };
 
   const editProfile = async (event) => {
     event.preventDefault();
     // console.log(event);
     const editForm = event.target.form;
-    const json = await (
-      await fetch(
-        `http://127.0.0.1:8000/api/v1/accounts/${nickname}/edit-profile/`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-            "Content-Type": "application/json; charset=utf-8",
-          },
-          body: JSON.stringify({
-            nickname: editForm["edit-nickname"].value,
-            bio: editForm["edit-bio"].value,
-            gender: editForm["edit-gender"].value,
-          }),
-        }
-      )
-    ).json();
-    console.log(json);
+    const json = await privateAPI.post(`accounts/${nickname}/edit-profile/`, {
+      nickname: editForm["edit-nickname"].value,
+      bio: editForm["edit-bio"].value,
+      gender: editForm["edit-gender"].value,
+    });
+    console.log(json.data);
   };
 
   const deleteUser = async () => {
-    const json = await fetch("http://127.0.0.1:8000/api/v1/accounts/delete/", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      },
-    });
-    console.log(json);
+    const json = await privateAPI.post("accounts/delete/");
+    console.log(json.data);
     localStorage.clear();
   };
 

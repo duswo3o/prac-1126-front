@@ -1,3 +1,5 @@
+import { privateAPI } from "../axiosInstance";
+
 function CreatePost() {
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -10,20 +12,13 @@ function CreatePost() {
     formData.append("content", postCreateForm["input-content"].value);
     console.log(formData);
 
-    await fetch("http://127.0.0.1:8000/api/v1/posts/create/", {
-      method: "POST",
-      headers: {
-        // "Content-Type": "multipart/form-data",
-        Authorization: "Bearer " + localStorage.getItem("accessToken"),
-      },
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
+    await privateAPI
+      .post("posts/create/", formData)
+      .then((response) => {
+        console.log(response.data);
         postCreateForm.reset();
-      });
-    //   .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error.response));
   };
 
   return (

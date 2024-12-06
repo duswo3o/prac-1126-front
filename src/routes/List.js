@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import Post from "../components/Post";
 
+import { publicAPI } from "../axiosInstance";
+
 function List() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
   const getPosts = async () => {
-    const postList = await (
-      await fetch("http://127.0.0.1:8000/api/v1/posts/")
-    ).json();
-    setPosts(postList);
+    const postList = await publicAPI.get("posts/");
+    const data = postList.data;
+    setPosts(data);
     setLoading(false);
     return;
   };

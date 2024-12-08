@@ -34,7 +34,8 @@ function Comment({ id, showComments }) {
 
   const getComment = async () => {
     const commentsList = await publicAPI.get(`posts/${id}/comments/`);
-    setComments(commentsList);
+    const data = commentsList.data;
+    setComments(data);
     // console.log(commentsList);
   };
 

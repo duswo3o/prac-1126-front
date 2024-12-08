@@ -17,11 +17,11 @@ function refreshToken() {
       refresh: localStorage.getItem("refreshToken"),
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       const newAccessToken = response.data.access;
       localStorage.setItem("accessToken", newAccessToken);
-      console.log("토큰 갱신");
-      console.log("새 토큰 성공 : ", newAccessToken);
+      // console.log("토큰 갱신");
+      // console.log("새 토큰 성공 : ", newAccessToken);
       return newAccessToken;
     })
     .catch((error) => {

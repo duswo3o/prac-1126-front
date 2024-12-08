@@ -1,6 +1,8 @@
 import { publicAPI } from "../axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+  const navigate = useNavigate();
   function onSubmit(event) {
     event.preventDefault();
     const signUpForm = event.target.form;
@@ -15,8 +17,14 @@ function SignUp() {
         // console.log(response);
         // const data = response.data
         signUpForm.reset();
+        alert("회원가입에 성공하였습니다. 로그인을 시도해주세요. ")
+        navigate("/signin");
       })
-      .catch((error) => console.log(error.response));
+      .catch((error) => {console.log(error.response)
+        const errMsg = error.response.data
+        alert(errMsg.message || "이미 사용중인 이메일 혹은 닉네임입니다. ")
+      }
+    );
   }
   return (
     <div>

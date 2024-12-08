@@ -13,11 +13,12 @@ function SignIn() {
       })
       .then((response) => {
         // console.log(response.data);
-        const data = response.data
+        const data = response.data;
         localStorage.setItem("accessToken", data.access);
         localStorage.setItem("refreshToken", data.refresh);
         localStorage.setItem("email", signinForm["signin-email"].value);
         signinForm.reset();
+        window.location.href = "http://localhost:3000";
       })
       .catch((error) => {
         console.log(error.response);

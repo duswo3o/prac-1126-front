@@ -36,9 +36,14 @@ function Post({ id }) {
     }
   };
 
+  // function fileToUrl(file){
+  //   const file =
+  // }
+
   const getPost = async () => {
     const json = await publicAPI.get(`posts/${id}/`);
     const data = json.data;
+    console.log(data);
     setPost(data);
     setLoading(false);
     let likeUsers = data.like.map((l) => l.email);
@@ -65,8 +70,21 @@ function Post({ id }) {
   };
 
   const deletePost = async () => {
-    const json = await privateAPI.post(`posts/${id}/delete/`);
-    console.log(json.data);
+    const deleteConf = window.confirm("게시글을 삭제하시겠습니까?");
+    if (deleteConf) {
+      await privateAPI
+        .post(`posts/${id}/delete/`)
+        .then((response) => {
+          alert("게시글이 삭제되었습니다.");
+          // eslint-disable-next-line no-restricted-globals
+          location.reload();
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
+    }
+    // const json = await privateAPI.post(`posts/${id}/delete/`);
+    // console.log(json.data);
   };
 
   useEffect(() => {
@@ -112,10 +130,7 @@ function Post({ id }) {
               </div>
             ) : null}
           </div>
-          <img
-            src="https://velog.velcdn.com/images/woowoon920/post/2c808829-e449-4e43-814d-04ed70c5557f/image.png"
-            alt="blank"
-          />
+          <img src={`http://127.0.0.1:8000${post.image}`} alt="blank" />
           <br />
           <p>
             <strong>{post.author.nickname} </strong>

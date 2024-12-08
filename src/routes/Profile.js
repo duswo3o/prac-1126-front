@@ -126,7 +126,7 @@ function Profile() {
               >
                 <img
                   style={{ width: "100%" }}
-                  src="https://velog.velcdn.com/images/woowoon920/post/2c808829-e449-4e43-814d-04ed70c5557f/image.png"
+                  src={`http://127.0.0.1:8000${post.image}`}
                   alt=""
                 />
                 <div>

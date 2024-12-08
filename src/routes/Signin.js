@@ -7,7 +7,7 @@ function SignIn() {
     // console.log(event.target.form);
     // console.log(event.target["signin-email"].value);
     publicAPI
-      .post("http://127.0.0.1:8000/api/v1/accounts/signin/", {
+      .post("accounts/signin/", {
         email: signinForm["signin-email"].value,
         password: signinForm["signin-password"].value,
       })

@@ -7,7 +7,7 @@ function SignUp() {
     event.preventDefault();
     const signUpForm = event.target.form;
     publicAPI
-      .post("http://127.0.0.1:8000/api/v1/accounts/", {
+      .post("accounts/", {
         email: signUpForm["input-email"].value,
         password: signUpForm["input-password"].value,
         confirm_password: signUpForm["input-confirm-password"].value,

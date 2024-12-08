@@ -76,8 +76,7 @@ function Post({ id }) {
         .post(`posts/${id}/delete/`)
         .then((response) => {
           alert("게시글이 삭제되었습니다.");
-          // eslint-disable-next-line no-restricted-globals
-          location.reload();
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error.response.data);

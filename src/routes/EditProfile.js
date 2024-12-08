@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { publicAPI, privateAPI } from "../axiosInstance";
@@ -7,6 +7,7 @@ function EditProfile() {
   const { nickname } = useParams();
   const [user, setUser] = useState([]);
   const [gender, setGender] = useState(null);
+  const navigate = useNavigate();
 
   const getProfile = async () => {
     const profile = await publicAPI.get(`accounts/${nickname}/`);
@@ -20,18 +21,35 @@ function EditProfile() {
     event.preventDefault();
     // console.log(event);
     const editForm = event.target.form;
-    const json = await privateAPI.post(`accounts/${nickname}/edit-profile/`, {
-      nickname: editForm["edit-nickname"].value,
-      bio: editForm["edit-bio"].value,
-      gender: editForm["edit-gender"].value,
-    });
-    console.log(json.data);
+    await privateAPI
+      .post(`accounts/${nickname}/edit-profile/`, {
+        nickname: editForm["edit-nickname"].value,
+        bio: editForm["edit-bio"].value,
+        gender: editForm["edit-gender"].value,
+      })
+      .then((response) => {
+        console.log(response.data);
+        alert("프로필 정보가 수정되었습니다");
+        navigate(`/profile/${nickname}`);
+      });
   };
 
   const deleteUser = async () => {
-    const json = await privateAPI.post("accounts/delete/");
-    console.log(json.data);
-    localStorage.clear();
+    const deleteConfirm = window.confirm("계정을 삭제하시겠습니까?");
+    if (deleteConfirm) {
+      await privateAPI
+        .post("accounts/delete/")
+        .then((response) => {
+          console.log(response.data);
+          localStorage.clear();
+          alert("계정이 삭제되었습니다");
+          window.location.href = "http://localhost:3000";
+        })
+        .catch((error) => {
+          const errMsg = error.response.data;
+          console.log(errMsg);
+        });
+    }
   };
 
   useEffect(() => {

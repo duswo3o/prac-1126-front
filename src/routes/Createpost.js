@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { privateAPI } from "../axiosInstance";
 
 function CreatePost() {
+  const navigate = useNavigate()
   const onSubmit = async (event) => {
     event.preventDefault();
     const inputImg = document.getElementById("input-img");
@@ -17,6 +19,7 @@ function CreatePost() {
       .then((response) => {
         console.log(response.data);
         postCreateForm.reset();
+        navigate("/")
       })
       .catch((error) => console.log(error.response));
   };

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { publicAPI, privateAPI } from "../axiosInstance";
 
 function UpdatePost() {
   const { id } = useParams();
   const [post, setPost] = useState([]);
+  const navigate = useNavigate();
 
   const getPost = async () => {
     const json = await publicAPI.get(`posts/${id}/`);
@@ -30,6 +31,7 @@ function UpdatePost() {
       .post(`posts/${id}/update/`, formData)
       .then((response) => {
         console.log(response.data);
+        navigate("/");
       })
       .catch((error) => {
         console.log(error.response);

@@ -5,6 +5,7 @@ import { publicAPI, privateAPI } from "../axiosInstance";
 function Comment({ id, showComments }) {
   const [comments, setComments] = useState([]);
   const [updateId, setUpdateID] = useState(false);
+  const [isShow, setIsShow] = useState(showComments);
 
   const getUser = (userId) => {
     const token = localStorage.getItem("accessToken");
@@ -48,9 +49,14 @@ function Comment({ id, showComments }) {
       })
       .then((response) => {
         commentInput.reset();
+        setIsShow(true);
         getComment();
       })
       .catch((error) => console.log(error.response));
+  };
+
+  const shwoComment = () => {
+    setIsShow((cur) => !cur);
   };
 
   const deleteComment = async (commentId, e) => {
@@ -96,6 +102,11 @@ function Comment({ id, showComments }) {
 
   return (
     <div>
+      <span onClick={shwoComment} style={{ cursor: "pointer" }}>
+        {" "}
+        💬{" "}
+      </span>{" "}
+      <span>{comments.length}</span>
       <form id="comment-form" onSubmit={onSubmit}>
         <label htmlFor="input-comment">댓글 : </label>
         <input
@@ -111,7 +122,7 @@ function Comment({ id, showComments }) {
           ⬆️
         </button>
       </form>
-      {showComments ? (
+      {isShow ? (
         comments.length === 0 ? (
           <p>댓글이 없습니다 💭</p>
         ) : (

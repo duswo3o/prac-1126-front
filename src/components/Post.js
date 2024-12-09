@@ -65,9 +65,9 @@ function Post({ id }) {
     console.log(data); // 좋아요 상태 출력
   };
 
-  const showComment = () => {
-    setShowComments((current) => !current);
-  };
+  // const showComment = () => {
+  //   setShowComments((current) => !current);
+  // };
 
   const deletePost = async () => {
     const deleteConf = window.confirm("게시글을 삭제하시겠습니까?");
@@ -142,11 +142,11 @@ function Post({ id }) {
             {likeUser ? "❤️" : "🤍"}{" "}
           </span>{" "}
           <span> {post.like_count} </span>
-          <span onClick={showComment} style={{ cursor: "pointer" }}>
+          {/* <span onClick={showComment} style={{ cursor: "pointer" }}>
             {" "}
             💬{" "}
           </span>{" "}
-          <span>{post.comments.length}</span>
+          <span>{post.comments.length}</span> */}
           <Comment id={id} showComments={showComments} />
           <hr />
         </div>

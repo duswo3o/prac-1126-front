@@ -75,36 +75,48 @@ function Profile() {
       ) : (
         <div>
           <h3>{userInfo.nickname}'s Profile</h3>
-          {isProfileUser ? (
+
+          <div style={{ display: "flex", alignItems:"center", justifyContent:"center"}}>
             <div>
-              <Link to={`/${nickname}/edit`}>
-                <button>프로필 수정</button>
-              </Link>
+              <img
+                src={`http://127.0.0.1:8000${userInfo.image}`}
+                alt=""
+                style={{ width: "70px", borderRadius: "50px" }}
+              />
+              {isProfileUser ? (
+                <div>
+                  <Link to={`/${nickname}/edit`}>
+                    <button>프로필 수정</button>
+                  </Link>
+                </div>
+              ) : (
+                <button onClick={followBtn}>
+                  {isFollow ? "팔로잉" : "팔로우"}
+                </button>
+              )}
             </div>
-          ) : (
-            <button onClick={followBtn}>
-              {isFollow ? "팔로잉" : "팔로우"}
-            </button>
-          )}
-          <div style={{ display: "flex" }}>
-            <div style={{ padding: "5px", margin: "3px" }}>
-              {userInfo.posts.length}
-              <br />
-              <span>게시물</span>
-            </div>
-            <div style={{ padding: "5px", margin: "3px" }}>
-              {userInfo.followers.length}
-              <br />
-              <span>팔로워</span>
-            </div>
-            <div style={{ padding: "5px", margin: "3px" }}>
-              {userInfo.followings.length}
-              <br />
-              <span>팔로잉</span>
+
+            <div style={{ display: "flex" }}>
+              <div style={{ padding: "5px", margin: "3px" }}>
+                {userInfo.posts.length}
+                <br />
+                <span>게시물</span>
+              </div>
+              <div style={{ padding: "5px", margin: "3px" }}>
+                {userInfo.followers.length}
+                <br />
+                <span>팔로워</span>
+              </div>
+              <div style={{ padding: "5px", margin: "3px" }}>
+                {userInfo.followings.length}
+                <br />
+                <span>팔로잉</span>
+              </div>
             </div>
           </div>
+
           <br />
-          <div>{userInfo.bio}</div>
+          <div style={{ display: "flex", alignItems:"center", justifyContent:"center"}} >{userInfo.bio}</div>
           <div
             style={{
               display: "flex",

@@ -107,7 +107,7 @@ function Post({ id }) {
             >
               <p>
                 <img
-                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  src={`http://127.0.0.1:8000${post.author.image}`}
                   alt="default profile image"
                   style={{
                     height: "30px",

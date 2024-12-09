@@ -27,7 +27,8 @@ function refreshToken() {
     .catch((error) => {
       console.log(error);
       localStorage.clear();
-      alert("로그아웃되었습니다. 다시 로그인을 시도해주세요");
+      alert("토큰이 만료되었습니다. 다시 로그인을 시도해주세요");
+      window.location.href = "http://localhost:3000/signin";
     });
 }
 

@@ -43,7 +43,7 @@ function Post({ id }) {
   const getPost = async () => {
     const json = await publicAPI.get(`posts/${id}/`);
     const data = json.data;
-    console.log(data);
+    // console.log(data);
     setPost(data);
     setLoading(false);
     let likeUsers = data.like.map((l) => l.email);

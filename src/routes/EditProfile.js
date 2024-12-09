@@ -21,14 +21,22 @@ function EditProfile() {
     event.preventDefault();
     // console.log(event);
     const editForm = event.target.form;
+    const editImg = document.getElementById("edit-img").files[0];
+    const formData = new FormData();
+
+    formData.append("nickname", editForm["edit-nickname"].value);
+    formData.append("bio", editForm["edit-bio"].value);
+    formData.append("gender", editForm["edit-gender"].value);
+
+    // console.log(editImg);
+    if (editImg) {
+      formData.append("image", editImg);
+    }
+
     await privateAPI
-      .post(`accounts/${nickname}/edit-profile/`, {
-        nickname: editForm["edit-nickname"].value,
-        bio: editForm["edit-bio"].value,
-        gender: editForm["edit-gender"].value,
-      })
+      .post(`accounts/${nickname}/edit-profile/`, formData)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         alert("프로필 정보가 수정되었습니다");
         navigate(`/profile/${nickname}`);
       });
@@ -40,7 +48,7 @@ function EditProfile() {
       await privateAPI
         .post("accounts/delete/")
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           localStorage.clear();
           alert("계정이 삭제되었습니다");
           window.location.href = "http://localhost:3000";
@@ -60,6 +68,11 @@ function EditProfile() {
     <div>
       <h3>프로필 편집</h3>
       <form id="edit-form">
+        <label>프로필 이미지</label>
+        <input type="file" accept="image/*" id="edit-img" />
+        <br />
+        <br />
+
         <label>nickname : </label>
         <input
           id="edit-nickname"

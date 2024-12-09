@@ -81,7 +81,7 @@ function Profile() {
               <img
                 src={`http://127.0.0.1:8000${userInfo.image}`}
                 alt=""
-                style={{ width: "70px", borderRadius: "50px" }}
+                style={{ width: "70px", height:"70px",  borderRadius: "50px" }}
               />
               {isProfileUser ? (
                 <div>
@@ -90,9 +90,11 @@ function Profile() {
                   </Link>
                 </div>
               ) : (
+                <div>
                 <button onClick={followBtn}>
                   {isFollow ? "팔로잉" : "팔로우"}
                 </button>
+                </div>
               )}
             </div>
 
@@ -128,7 +130,7 @@ function Profile() {
               <div
                 key={post.id}
                 style={{
-                  width: "300px",
+                  width: "200px",
                   height: "300px",
                   display: "flex",
                   flexDirection: "column",

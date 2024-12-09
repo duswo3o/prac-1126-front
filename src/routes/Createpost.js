@@ -12,7 +12,7 @@ function CreatePost() {
     const formData = new FormData();
     formData.append("image", inputImg.files[0]);
     formData.append("content", postCreateForm["input-content"].value);
-    console.log(formData);
+    // console.log(formData);
 
     await privateAPI
       .post("posts/create/", formData)

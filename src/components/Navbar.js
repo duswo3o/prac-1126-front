@@ -16,14 +16,18 @@ function Navbar() {
   };
 
   const logoutBtn = async () => {
-    await privateAPI
-      .post("accounts/signout/", {
-        refresh: localStorage.getItem("refreshToken"),
-      })
-      .then((response) => {
-        localStorage.clear();
-        getLogin();
-      });
+    const confirmLogout = window.confirm("로그아웃하시겠습니까?");
+
+    if (confirmLogout) {
+      await privateAPI
+        .post("accounts/signout/", {
+          refresh: localStorage.getItem("refreshToken"),
+        })
+        .then((response) => {
+          localStorage.clear();
+          window.location.reload();
+        });
+    }
   };
 
   useEffect(() => {

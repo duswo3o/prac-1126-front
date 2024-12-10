@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { publicAPI, privateAPI } from "../axiosInstance";
+import style from "./profile.module.css";
 
 function Profile() {
   const { nickname } = useParams();
@@ -10,6 +11,35 @@ function Profile() {
   const [userInfo, setUserInfo] = useState([]);
   const [isFollow, setIsFollow] = useState(false);
   const [isProfileUser, setIsProfileUser] = useState(false);
+
+  const [showModal, setShowModal] = useState("none");
+  const [curCrosel, setCurCrosel] = useState(0);
+
+  const CAROUSEL_LENGTH = document.querySelectorAll(".cell").length - 1; // 캐러샐의 갯수
+
+  const carousel = document.getElementById("carousel");
+
+  const nextEvent = () => {
+    if (curCrosel < CAROUSEL_LENGTH) {
+      carousel.style.transform = `translateX(${(curCrosel + 1) * -600}px)`;
+      setCurCrosel((cur) => cur + 1);
+    } else {
+      setCurCrosel(0);
+      carousel.style.transform = `translateX(0px)`;
+    }
+    // console.log(curCrosel);
+  };
+
+  const prevEvent = () => {
+    if (curCrosel > 0) {
+      carousel.style.transform = `translateX(${(curCrosel - 1) * -600}px)`;
+      setCurCrosel((cur) => cur - 1);
+    } else {
+      setCurCrosel(CAROUSEL_LENGTH);
+      carousel.style.transform = `translateX(${CAROUSEL_LENGTH * -600}px)`;
+    }
+    // console.log(curCrosel);
+  };
 
   function isSameUser(profileID) {
     const token = localStorage.getItem("accessToken");
@@ -64,6 +94,17 @@ function Profile() {
     }
   };
 
+  const showPost = async (e, idx) => {
+    setCurCrosel(idx);
+    // console.log(idx);
+    carousel.style.transform = `translateX(${idx * -600}px)`;
+    setShowModal("flex");
+  };
+
+  const hidePost = () => {
+    setShowModal("none");
+  };
+
   useEffect(() => {
     getProfile();
   }, [isFollow]);
@@ -76,12 +117,57 @@ function Profile() {
         <div>
           <h3>{userInfo.nickname}'s Profile</h3>
 
-          <div style={{ display: "flex", alignItems:"center", justifyContent:"center"}}>
+          <div
+            className={style.modal}
+            id="modal"
+            style={{ display: showModal }}
+          >
+            <div className={style.modal_body}>
+              <div
+                style={{ float: "right", cursor: "pointer" }}
+                onClick={hidePost}
+              >
+                [X]
+              </div>
+
+              {/* 캐로셀 들어갈 자리 */}
+              <div className={style.container}>
+                <div className={style.carousel} id="carousel">
+                  {/* <p>content</p> */}
+                  {userInfo.posts.map((post) => (
+                    <div key={post.id} className="cell">
+                      {/* <p>content</p> */}
+                      <img
+                        src={`http://127.0.0.1:8000${post.image}`}
+                        alt=""
+                        style={{ width: "600px" }}
+                      />
+                      <p>{post.content}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className={style.prev_btn} id="prev-btn" onClick={prevEvent}>
+                이전
+              </div>
+              <div className={style.next_btn} id="next-btn" onClick={nextEvent}>
+                다음
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <div>
               <img
                 src={`http://127.0.0.1:8000${userInfo.image}`}
                 alt=""
-                style={{ width: "70px", height:"70px",  borderRadius: "50px" }}
+                style={{ width: "70px", height: "70px", borderRadius: "50px" }}
               />
               {isProfileUser ? (
                 <div>
@@ -91,9 +177,9 @@ function Profile() {
                 </div>
               ) : (
                 <div>
-                <button onClick={followBtn}>
-                  {isFollow ? "팔로잉" : "팔로우"}
-                </button>
+                  <button onClick={followBtn}>
+                    {isFollow ? "팔로잉" : "팔로우"}
+                  </button>
                 </div>
               )}
             </div>
@@ -118,7 +204,16 @@ function Profile() {
           </div>
 
           <br />
-          <div style={{ display: "flex", alignItems:"center", justifyContent:"center"}} >{userInfo.bio}</div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {userInfo.bio}
+          </div>
+
           <div
             style={{
               display: "flex",
@@ -137,11 +232,12 @@ function Profile() {
                   alignItems: "center",
                   justifyContent: "center",
                 }}
+                onClick={(e) => showPost(e, userInfo.posts.indexOf(post))}
               >
                 <img
-                  style={{ width: "100%" }}
                   src={`http://127.0.0.1:8000${post.image}`}
                   alt=""
+                  style={{ width: "100%" }}
                 />
                 <div>
                   <span> ❤️ {post.like_count} </span>

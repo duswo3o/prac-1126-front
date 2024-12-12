@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import { publicAPI, privateAPI } from "../axiosInstance";
 import style from "./profile.module.css";
+import Comment from "../components/Comment";
 
 function Profile() {
   const { nickname } = useParams();
@@ -17,9 +18,14 @@ function Profile() {
 
   const CAROUSEL_LENGTH = document.querySelectorAll(".cell").length - 1; // 캐러샐의 갯수
 
-  const carousel = document.getElementById("carousel");
+  const findCarousel = () => {
+    const carousel = document.getElementById("carousel");
+    return carousel;
+  };
+  // console.log(carousel);
 
   const nextEvent = () => {
+    const carousel = findCarousel();
     if (curCrosel < CAROUSEL_LENGTH) {
       carousel.style.transform = `translateX(${(curCrosel + 1) * -600}px)`;
       setCurCrosel((cur) => cur + 1);
@@ -31,6 +37,7 @@ function Profile() {
   };
 
   const prevEvent = () => {
+    const carousel = findCarousel();
     if (curCrosel > 0) {
       carousel.style.transform = `translateX(${(curCrosel - 1) * -600}px)`;
       setCurCrosel((cur) => cur - 1);
@@ -95,6 +102,7 @@ function Profile() {
   };
 
   const showPost = async (e, idx) => {
+    const carousel = findCarousel();
     setCurCrosel(idx);
     // console.log(idx);
     carousel.style.transform = `translateX(${idx * -600}px)`;
@@ -135,14 +143,23 @@ function Profile() {
                 <div className={style.carousel} id="carousel">
                   {/* <p>content</p> */}
                   {userInfo.posts.map((post) => (
-                    <div key={post.id} className="cell">
+                    <div
+                      key={post.id}
+                      className="cell"
+                      style={{ display: "flex" }}
+                    >
                       {/* <p>content</p> */}
-                      <img
-                        src={`http://127.0.0.1:8000${post.image}`}
-                        alt=""
-                        style={{ width: "600px" }}
-                      />
-                      <p>{post.content}</p>
+                      <div style={{ width: "400px" }} >
+                        <img
+                          src={`http://127.0.0.1:8000${post.image}`}
+                          alt=""
+                          style={{width:"100%"}}
+                        />
+                        <p>{post.content}</p>
+                      </div>
+                      <div style={{ width: "200px" }}>
+                        <Comment id={post.id} showComments={true} />
+                      </div>
                     </div>
                   ))}
                 </div>

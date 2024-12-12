@@ -32,7 +32,7 @@
 
 .container {
   margin: 10px;
-  overflow: hidden;
+  overflow-x: hidden;
   width: 600px;
   height: 400px;
 }

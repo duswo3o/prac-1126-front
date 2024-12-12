@@ -113,7 +113,7 @@ function Comment({ id, showComments }) {
           id="input-comment"
           name="input-comment"
           palceholder="댓글..."
-          style={{ width: "500px" }}
+          style={{ width: "60%" }}
         />
         <button
           style={{ backgroundColor: "transparent", border: "none" }}
@@ -126,7 +126,7 @@ function Comment({ id, showComments }) {
         comments.length === 0 ? (
           <p>댓글이 없습니다 💭</p>
         ) : (
-          <div>
+          <div style={{ height: "350px", overflowY: "scroll" }}>
             {comments.map((comment) => (
               <div key={comment.id}>
                 <strong>{comment.author.nickname}</strong>{" "}
@@ -136,7 +136,7 @@ function Comment({ id, showComments }) {
                       <input
                         id="update-comment"
                         defaultValue={comment.content}
-                        style={{ width: "500px" }}
+                        style={{ width: "60%" }}
                       />
                       <button onClick={(e) => sendUpdateComment(e, comment.id)}>
                         수정완료

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { publicAPI, privateAPI } from "../axiosInstance";
 import style from "./profile.module.css";
 import Comment from "../components/Comment";
+import Post from "../components/Post";
 
 function Profile() {
   const { nickname } = useParams();
@@ -148,15 +149,18 @@ function Profile() {
                       className="cell"
                       style={{ display: "flex" }}
                     >
+                      <div style={{ width: "400px" }}>
+                      <Post id={post.id}/>
+                      </div>
                       {/* <p>content</p> */}
-                      <div style={{ width: "400px" }} >
+                      {/* <div style={{ width: "400px" }} >
                         <img
                           src={`http://127.0.0.1:8000${post.image}`}
                           alt=""
                           style={{width:"100%"}}
                         />
                         <p>{post.content}</p>
-                      </div>
+                      </div> */}
                       <div style={{ width: "200px" }}>
                         <Comment id={post.id} showComments={true} />
                       </div>
@@ -256,10 +260,10 @@ function Profile() {
                   alt=""
                   style={{ width: "100%" }}
                 />
-                <div>
+                {/* <div>
                   <span> ❤️ {post.like_count} </span>
                   <span> 💬 {post.comments.length}</span>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>

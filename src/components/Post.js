@@ -129,7 +129,8 @@ function Post({ id }) {
               </div>
             ) : null}
           </div>
-          <img src={`http://127.0.0.1:8000${post.image}`} alt="blank" />
+          <div style={{}}>
+          <img src={`http://127.0.0.1:8000${post.image}`} alt="blank" style={{width:"100%"}} />
           <br />
           <p>
             <strong>{post.author.nickname} </strong>
@@ -138,6 +139,7 @@ function Post({ id }) {
               {post.created_at.slice(0, 10)}{" "}
             </span>
           </p>
+          </div>
           <span onClick={likeBtn} style={{ cursor: "pointer" }}>
             {likeUser ? "❤️" : "🤍"}{" "}
           </span>{" "}
@@ -147,8 +149,8 @@ function Post({ id }) {
             💬{" "}
           </span>{" "}
           <span>{post.comments.length}</span> */}
-          <Comment id={id} showComments={showComments} />
-          <hr />
+          {/* <Comment id={id} showComments={showComments} /> */}
+          {/* <hr /> */}
         </div>
       )}
     </div>

@@ -25,7 +25,8 @@ function Navbar() {
         })
         .then((response) => {
           localStorage.clear();
-          window.location.reload();
+          window.location.href = "http://localhost:3000";
+          // window.location.reload();
         });
     }
   };

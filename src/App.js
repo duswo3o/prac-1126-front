@@ -8,10 +8,13 @@ import CreatePost from "./routes/Createpost";
 import UpdatePost from "./routes/Updatepost";
 import EditProfile from "./routes/EditProfile";
 import { useState } from "react";
+// import { useNavigation } from "react-router-dom";
 
 import axios from "axios";
 
 function App() {
+  // const navigation = useNavigation()
+
   const extendToken = () => {
     const refreshToken = localStorage.getItem("refreshToken");
     // console.log("토큰 연장 시작")
@@ -35,6 +38,12 @@ function App() {
       console.log("연장할 토큰 없음");
     }
   };
+
+  // console.log(performance.navigation.type===1);
+  if (performance.navigation.type === 1) {
+    console.log("새로고침");
+    extendToken();
+  }
 
   useState(() => {
     setInterval(() => {

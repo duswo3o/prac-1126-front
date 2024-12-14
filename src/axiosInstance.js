@@ -19,7 +19,9 @@ function refreshToken() {
     .then((response) => {
       // console.log(response);
       const newAccessToken = response.data.access;
+      const newRefreshToken = response.data.refesh;
       localStorage.setItem("accessToken", newAccessToken);
+      localStorage.setItem("refreshToken", newRefreshToken)
       // console.log("토큰 갱신");
       // console.log("새 토큰 성공 : ", newAccessToken);
       return newAccessToken;
@@ -65,11 +67,11 @@ privateAPI.interceptors.response.use(
       // 인증 에러 처리
       console.error("Unauthorized, logging out...");
       const newAccessToken = await refreshToken(); // 토큰 재발급
-      console.log(newAccessToken); // 얘가 지금 undefined로 나오고있음
+      // console.log(newAccessToken); // 얘가 지금 undefined로 나오고있음
       // 로그아읏이나 redirection 처리
       //   originalRequest.sent = true;
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`; // 기존 요청의 토큰 교체
-      console.log(originalRequest.headers.Authorization);
+      // console.log(originalRequest.headers.Authorization);
       return axios(originalRequest);
     }
     return Promise.reject(error);

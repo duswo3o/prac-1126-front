@@ -6,6 +6,7 @@ import { publicAPI, privateAPI } from "../axiosInstance";
 import style from "./profile.module.css";
 import Comment from "../components/Comment";
 import Post from "../components/Post";
+import FollowModal from "../components/FollowModal";
 
 function Profile() {
   const { nickname } = useParams();
@@ -15,6 +16,7 @@ function Profile() {
   const [isProfileUser, setIsProfileUser] = useState(false);
 
   const [showFollowerModal, setShowFollowerModal] = useState("none");
+  const [showFollowingModal, setShowFollowingModal] = useState("none");
   const [showPostModal, setshowPostModal] = useState("none");
   const [curCrosel, setCurCrosel] = useState(0);
 
@@ -103,10 +105,16 @@ function Profile() {
     }
   };
 
-  const showFollower = (e) => {
-    const followers = userInfo.followers;
-    console.log(followers);
+  const showFollower = () => {
+    // const followers = userInfo.followers;
+    // console.log(followers);
     setShowFollowerModal("flex");
+  };
+
+  const showFollowing = () => {
+    // console.log("following list clicked");
+    setShowFollowingModal("flex");
+    // console.log("profile route : ", showFollowingModal);
   };
 
   const showPost = async (e, idx) => {
@@ -117,7 +125,11 @@ function Profile() {
     setshowPostModal("flex");
   };
 
-  const hideFollower = () => {
+  const closeFollowingModal = () => {
+    setShowFollowingModal("none");
+  };
+
+  const closeFollowerModal = () => {
     setShowFollowerModal("none");
   };
 
@@ -137,73 +149,17 @@ function Profile() {
         <div>
           <h3>{userInfo.nickname}'s Profile</h3>
 
-          {/* 팔로워 모달 */}
-          <div
-            className={style.modal}
-            id="follower-modal"
-            style={{ display: showFollowerModal }}
-          >
-            <div className={style.modal_body}>
-              <div
-                style={{ float: "right", cursor: "pointer" }}
-                onClick={hideFollower}
-              >
-                [X]
-              </div>
-              <br />
-              {/* 팔로워 내용 보여주기 */}
-              {userInfo.followers.map((follower) => (
-                <Link
-                  to={`/${follower.nickname}`}
-                  key={follower.id}
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    cursor: "pointer",
-                  }}
-                  onClick={hideFollower}
-                >
-                  <div
-                    style={{
-                      border: "1px solid",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      margin: "5px",
-                      padding: "5px",
-                    }}
-                  >
-                    <img
-                      src={`http://127.0.0.1:8000${follower.image}`}
-                      style={{
-                        width: "30px",
-                        borderRadius: "25px",
-                        border: "1px solid",
-                        margin: "5px",
-                      }}
-                    />
-                    <div>{follower.nickname}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-          {/* 팔로잉 모달
-          <div
-            className={style.modal}
-            id="following-modal"
-            style={{ display: showFollowModal }}
-          >
-            <div className={style.modal_body}>
-              <div
-                style={{ float: "right", cursor: "pointer" }}
-                onClick={hidePost}
-              >
-                [X]
-              </div>
-
-            </div>
-          </div> */}
+          {/* 팔로워, 팔로잉 모달 */}          
+          <FollowModal
+          showModal={showFollowerModal}
+          closeModal={closeFollowerModal}
+          follows={userInfo.followers}
+          />
+          <FollowModal
+            showModal={showFollowingModal}
+            closeModal={closeFollowingModal}
+            follows={userInfo.followings}
+          />
 
           <div
             className={style.modal}
@@ -221,7 +177,6 @@ function Profile() {
               {/* 캐로셀 들어갈 자리 */}
               <div className={style.container}>
                 <div className={style.carousel} id="carousel">
-                  {/* <p>content</p> */}
                   {userInfo.posts.map((post) => (
                     <div
                       key={post.id}
@@ -231,15 +186,6 @@ function Profile() {
                       <div style={{ width: "400px" }}>
                         <Post id={post.id} />
                       </div>
-                      {/* <p>content</p> */}
-                      {/* <div style={{ width: "400px" }} >
-                        <img
-                          src={`http://127.0.0.1:8000${post.image}`}
-                          alt=""
-                          style={{width:"100%"}}
-                        />
-                        <p>{post.content}</p>
-                      </div> */}
                       <div style={{ width: "200px" }}>
                         <Comment id={post.id} showComments={true} />
                       </div>
@@ -298,7 +244,10 @@ function Profile() {
                 <br />
                 <span>팔로워</span>
               </div>
-              <div style={{ padding: "5px", margin: "3px" }}>
+              <div
+                style={{ padding: "5px", margin: "3px" }}
+                onClick={showFollowing}
+              >
                 {userInfo.followings.length}
                 <br />
                 <span>팔로잉</span>
@@ -342,10 +291,6 @@ function Profile() {
                   alt=""
                   style={{ width: "100%" }}
                 />
-                {/* <div>
-                  <span> ❤️ {post.like_count} </span>
-                  <span> 💬 {post.comments.length}</span>
-                </div> */}
               </div>
             ))}
           </div>

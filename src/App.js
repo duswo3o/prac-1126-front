@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar";
 import CreatePost from "./routes/Createpost";
 import UpdatePost from "./routes/Updatepost";
 import EditProfile from "./routes/EditProfile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { useNavigation } from "react-router-dom";
 
 import axios from "axios";
@@ -45,7 +45,7 @@ function App() {
     extendToken();
   }
 
-  useState(() => {
+  useEffect(() => {
     setInterval(() => {
       extendToken();
     }, 179 * 60000);

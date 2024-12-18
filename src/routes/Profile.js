@@ -14,7 +14,8 @@ function Profile() {
   const [isFollow, setIsFollow] = useState(false);
   const [isProfileUser, setIsProfileUser] = useState(false);
 
-  const [showModal, setShowModal] = useState("none");
+  const [showFollowerModal, setShowFollowerModal] = useState("none");
+  const [showPostModal, setshowPostModal] = useState("none");
   const [curCrosel, setCurCrosel] = useState(0);
 
   const CAROUSEL_LENGTH = document.querySelectorAll(".cell").length - 1; // 캐러샐의 갯수
@@ -86,7 +87,7 @@ function Profile() {
         : setIsFollow(false);
     }
     isSameUser(data.id);
-    // console.log(user)
+    // console.log(data)
     return;
   };
 
@@ -102,21 +103,31 @@ function Profile() {
     }
   };
 
+  const showFollower = (e) => {
+    const followers = userInfo.followers;
+    console.log(followers);
+    setShowFollowerModal("flex");
+  };
+
   const showPost = async (e, idx) => {
     const carousel = findCarousel();
     setCurCrosel(idx);
     // console.log(idx);
     carousel.style.transform = `translateX(${idx * -600}px)`;
-    setShowModal("flex");
+    setshowPostModal("flex");
+  };
+
+  const hideFollower = () => {
+    setShowFollowerModal("none");
   };
 
   const hidePost = () => {
-    setShowModal("none");
+    setshowPostModal("none");
   };
 
   useEffect(() => {
     getProfile();
-  }, [isFollow]);
+  }, [isFollow, nickname]);
 
   return (
     <div>
@@ -126,10 +137,78 @@ function Profile() {
         <div>
           <h3>{userInfo.nickname}'s Profile</h3>
 
+          {/* 팔로워 모달 */}
           <div
             className={style.modal}
-            id="modal"
-            style={{ display: showModal }}
+            id="follower-modal"
+            style={{ display: showFollowerModal }}
+          >
+            <div className={style.modal_body}>
+              <div
+                style={{ float: "right", cursor: "pointer" }}
+                onClick={hideFollower}
+              >
+                [X]
+              </div>
+              <br />
+              {/* 팔로워 내용 보여주기 */}
+              {userInfo.followers.map((follower) => (
+                <Link
+                  to={`/${follower.nickname}`}
+                  key={follower.id}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    cursor: "pointer",
+                  }}
+                  onClick={hideFollower}
+                >
+                  <div
+                    style={{
+                      border: "1px solid",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "5px",
+                      padding: "5px",
+                    }}
+                  >
+                    <img
+                      src={`http://127.0.0.1:8000${follower.image}`}
+                      style={{
+                        width: "30px",
+                        borderRadius: "25px",
+                        border: "1px solid",
+                        margin: "5px",
+                      }}
+                    />
+                    <div>{follower.nickname}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+          {/* 팔로잉 모달
+          <div
+            className={style.modal}
+            id="following-modal"
+            style={{ display: showFollowModal }}
+          >
+            <div className={style.modal_body}>
+              <div
+                style={{ float: "right", cursor: "pointer" }}
+                onClick={hidePost}
+              >
+                [X]
+              </div>
+
+            </div>
+          </div> */}
+
+          <div
+            className={style.modal}
+            id="post-modal"
+            style={{ display: showPostModal }}
           >
             <div className={style.modal_body}>
               <div
@@ -150,7 +229,7 @@ function Profile() {
                       style={{ display: "flex" }}
                     >
                       <div style={{ width: "400px" }}>
-                      <Post id={post.id}/>
+                        <Post id={post.id} />
                       </div>
                       {/* <p>content</p> */}
                       {/* <div style={{ width: "400px" }} >
@@ -211,7 +290,10 @@ function Profile() {
                 <br />
                 <span>게시물</span>
               </div>
-              <div style={{ padding: "5px", margin: "3px" }}>
+              <div
+                style={{ padding: "5px", margin: "3px" }}
+                onClick={showFollower}
+              >
                 {userInfo.followers.length}
                 <br />
                 <span>팔로워</span>

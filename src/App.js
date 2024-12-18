@@ -57,7 +57,7 @@ function App() {
       <Routes>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
-        <Route path="/profile/:nickname" element={<Profile />}></Route>
+        <Route exact path="/:nickname" element={<Profile />}></Route>
         <Route path="" element={<List />}></Route>
         <Route path="/post" element={<CreatePost />}></Route>
         <Route path="/:id/update" element={<UpdatePost />}></Route>

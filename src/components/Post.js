@@ -98,7 +98,7 @@ function Post({ id }) {
         <div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Link
-              to={`/profile/${post.author.nickname}`}
+              to={`/${post.author.nickname}`}
               style={{
                 textDecoration: "none",
                 color: "black",

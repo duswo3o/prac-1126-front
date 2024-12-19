@@ -1,69 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignUp from "./routes/signup";
-import SignIn from "./routes/Signin";
-import Profile from "./routes/Profile";
-import List from "./routes/List";
-import Navbar from "./components/Navbar";
-import CreatePost from "./routes/Createpost";
-import UpdatePost from "./routes/Updatepost";
-import EditProfile from "./routes/EditProfile";
-import { useEffect, useState } from "react";
-// import { useNavigation } from "react-router-dom";
+import "./App.css";
+import { useRecoilState } from "recoil";
+import { countState } from "./atom";
 
-import axios from "axios";
+function Counter() {
+  const [count, setCount] = useRecoilState(countState);
+  return (
+    <div>
+      <h1>Counter</h1>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        +
+      </button>
+      {count}
+    </div>
+  );
+}
+
+function DisplayCounter() {
+  const [count, setCount] = useRecoilState(countState);
+  return <div>{count}</div>;
+}
 
 function App() {
-  // const navigation = useNavigation()
-
-  const extendToken = () => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    // console.log("토큰 연장 시작")
-    if (refreshToken) {
-      axios
-        .post("http://127.0.0.1:8000/api/v1/accounts/token/refresh/", {
-          refresh: refreshToken,
-        })
-        .then((response) => {
-          const data = response.data;
-          localStorage.setItem("accessToken", data.access);
-          localStorage.setItem("refreshToken", data.refresh);
-          console.log("토큰 연장 완료");
-        })
-        .catch((error) => {
-          console.log(error.response);
-          console.log("유효하지 않은 토큰: 토큰 연장 실패");
-          localStorage.clear();
-        });
-    } else {
-      console.log("연장할 토큰 없음");
-    }
-  };
-
-  // console.log(performance.navigation.type===1);
-  if (performance.navigation.type === 1) {
-    console.log("새로고침");
-    extendToken();
-  }
-
-  useEffect(() => {
-    setInterval(() => {
-      extendToken();
-    }, 179 * 60000);
-  }, []);
-
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/signin" element={<SignIn />}></Route>
-        <Route exact path="/:nickname" element={<Profile />}></Route>
-        <Route path="" element={<List />}></Route>
-        <Route path="/post" element={<CreatePost />}></Route>
-        <Route path="/:id/update" element={<UpdatePost />}></Route>
-        <Route path="/:nickname/edit" element={<EditProfile />}></Route>
-      </Routes>
-    </Router>
+    <div>
+      <Counter />
+      <DisplayCounter />
+    </div>
   );
 }
 
